@@ -4,7 +4,7 @@ import { router, publicProcedure } from './trpc'
 import { GoogleGenAI } from "@google/genai";
 
 
-let store: any = { shapes: [] }
+let store: unknown = { shapes: [] }
 const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 export const appRouter = router({
   getDocument: publicProcedure.query(() => store),
@@ -12,6 +12,7 @@ export const appRouter = router({
   saveDocument: publicProcedure
     .input(z.any())
     .mutation(({ input }) => {
+      console.log('first')
       store = input
       return { success: true }
     }),

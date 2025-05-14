@@ -5,7 +5,7 @@ import { GoogleGenAI } from "@google/genai";
 
 
 let store: any = { shapes: [] }
-
+const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 export const appRouter = router({
   getDocument: publicProcedure.query(() => store),
 
@@ -21,7 +21,7 @@ export const appRouter = router({
     .input(z.object({ prompt: z.string() }))
     .mutation(async ({ input }) => {
 
-      const ai = new GoogleGenAI({ apiKey: "AIzaSyB6MkIx8EkkqWxYxWFaLw4mc7gfBNdKI3E" });
+      const ai = new GoogleGenAI({ apiKey });
 
       async function main() {
         const response = await ai.models.generateContent({

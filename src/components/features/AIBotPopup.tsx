@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Bot } from "lucide-react";
 import {
 	Dialog,
 	DialogTrigger,
@@ -25,14 +26,12 @@ const AIBotPopup = () => {
 		mutation.mutate({ prompt });
 	};
 
-	useEffect(() => {
-		console.log(mutation);
-	}, [mutation]);
-
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button>AI Drawing Tips</Button>
+				<Button>
+					AI Drawing Tips <Bot className="w-4 h-4" />{" "}
+				</Button>
 			</DialogTrigger>
 			<DialogContent className="flex flex-col gap-4 h-6/12 items-center justify-center text-center">
 				<DialogHeader>
@@ -61,15 +60,23 @@ const AIBotPopup = () => {
 					</Dialog>
 				</DialogHeader>
 				<DialogFooter className="flex flex-col gap-2 items-end w-full h-full">
-					<div className="flex flex-col w-full gap-2">
+					<div className="flex flex-col w-12 gap-2 justify-center items-center m-auto">
 						<input
 							type="text"
 							value={prompt}
 							onChange={(e) => setPrompt(e.target.value)}
-							placeholder="Type a prompt and get AI drawing tips."
+							onKeyDown={(e) => {
+								if (
+									e.key === "Enter" &&
+									prompt.trim() !== ""
+								) {
+									handleGenerateDrawing();
+								}
+							}}
+							placeholder="Type a prompt..."
 							className="flex-1 p-2 border border-gray-400 rounded"
 						/>
-						<div className="flex justify-center gap-2 w-full ">
+						<div className="flex justify-center gap-2 w-full pt-5 ">
 							<Button
 								onClick={handleGenerateDrawing}
 								className="h-12 px-6w-32 "
@@ -78,7 +85,7 @@ const AIBotPopup = () => {
 									mutation.isPending || prompt.trim() === ""
 								}
 							>
-								Bot Drawing Advices
+								Get Suggestion
 							</Button>
 							<DialogClose asChild>
 								<Button

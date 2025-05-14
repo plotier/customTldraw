@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { trpc } from "@/app/_trpc/client";
 import ModifyShapeButton from "../components/features/ModifyShapeButton";
 import AIBotPopup from "../components/features/AIBotPopup";
+import { AppSidebar } from "@/components/features/AppSidebar";
 
 function InsideOfContext() {
 	const editor = useEditor();
@@ -23,9 +24,8 @@ function InsideOfContext() {
 
 		try {
 			loadSnapshot(editor.store, data);
-			console.log("📂 Documento cargado:", data);
 		} catch (err) {
-			console.error("❌ Error cargando snapshot:", err);
+			console.error("Error cargando snapshot:", err);
 		}
 	}, [editor, data, isSuccess]);
 
@@ -35,7 +35,6 @@ function InsideOfContext() {
 		const cleanup = editor.store.listen(
 			() => {
 				const snapshot = getSnapshot(editor.store);
-				console.log("💾 Guardando snapshot:", snapshot);
 				saveDoc(snapshot);
 			},
 			{ source: "user", scope: "document" }
@@ -49,13 +48,12 @@ function InsideOfContext() {
 
 export default function HomePage() {
 	return (
-		<div className="h-screen w-screen">
-			<Tldraw>
+		<div className="h-screen w-screen relative">
+			<Tldraw hideUi>
+				<AppSidebar />
 				<InsideOfContext />
-				<div className="absolute top-10 left-0">
+				<div className="absolute top-10 right-6 flex flex-col gap-2">
 					<ModifyShapeButton />
-				</div>
-				<div className="absolute top-40 left-4">
 					<AIBotPopup />
 				</div>
 			</Tldraw>

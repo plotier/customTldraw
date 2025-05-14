@@ -2,25 +2,17 @@
 
 import { useEditor } from "@tldraw/tldraw";
 import { Button } from "@/components/ui/button";
-
+import { SwatchBook } from "lucide-react";
+import { useState } from "react";
+import { COLORS } from "@/lib/colors";
 const ModifyShapeButton = () => {
 	const editor = useEditor();
+	const [currentShapeIndex, setCurrentShapeIndex] =
+		useState(0);
+	const [buttonColor, setButtonColor] = useState("black");
 
 	const getRandomColor = () => {
-		const colors = [
-			"black",
-			"light-violet",
-			"violet",
-			"blue",
-			"light-blue",
-			"yellow",
-			"orange",
-			"green",
-			"light-green",
-			"light-red",
-			"red",
-
-		];
+		const colors = COLORS;
 		return colors[
 			Math.floor(Math.random() * colors.length)
 		];
@@ -28,33 +20,44 @@ const ModifyShapeButton = () => {
 
 	const handleClick = () => {
 		const shapes = editor.getCurrentPageShapes();
+
 		if (shapes.length === 0) {
-			console.log("No hay shapes para modificar");
+			console.log("No shapes to modify");
 			return;
 		}
 
-		const firstShape = shapes[0];
+		const index = currentShapeIndex % shapes.length;
+		const shape = shapes[index];
 		const newColor = getRandomColor();
 
 		editor.updateShapes([
 			{
-				id: firstShape.id,
-				type: firstShape.type,
+				id: shape.id,
+				type: shape.type,
 				props: {
-					...firstShape.props,
+					...shape.props,
 					color: newColor,
 				},
 			},
 		]);
+		setButtonColor(newColor);
+		setCurrentShapeIndex(
+			(prev) => (prev + 1) % shapes.length
+		);
 	};
 
 	return (
 		<Button
 			onClick={handleClick}
-			className="absolute top-4 left-4 text-white px-4 py-2 rounded"
-			variant={"default"}
+			variant="default"
+			className="gap-2"
+			style={{
+				backgroundColor: buttonColor,
+				color: "white",
+			}}
 		>
-			Cambiar color de shape
+			Auto Colorize
+			<SwatchBook className="w-4 h-4" />
 		</Button>
 	);
 };
